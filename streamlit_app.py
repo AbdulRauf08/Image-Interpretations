@@ -17,7 +17,7 @@ else:
     genai.configure(api_key=api_key)
     
     # Initialize the Gemini model
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # Create the file uploader and text input for the UI
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -44,4 +44,5 @@ else:
                     except Exception as e:
                         st.error(f"An error occurred: {e}")
             else:
+
                 st.warning("Please enter a prompt.")
