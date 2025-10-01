@@ -1,23 +1,23 @@
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
-import os
 import io
 
 # Set the title and header of the Streamlit app
 st.title("Intelligent Image Interpreter")
 st.header("Upload an image and ask a question")
 
-# Get the API key from environment variables or Streamlit secrets
-api_key = os.environ.get("GOOGLE_API_KEY")
+# --- SECURE API KEY RETRIEVAL ---
+try:
+    # 1. Get the API key securely from the st.secrets object.
+    # This reads from your local .streamlit/secrets.toml file.
+    api_key = st.secrets["GOOGLE_API_KEY"]
 
-if api_key is None:
-    st.error("API key not found. Please set the GOOGLE_API_KEY environment variable.")
-else:
+    # 2. Configure the Gemini API
     genai.configure(api_key=api_key)
-    
-    # Initialize the Gemini model
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
+
+    # --- UI and Logic ---
 
     # Create the file uploader and text input for the UI
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -44,5 +44,12 @@ else:
                     except Exception as e:
                         st.error(f"An error occurred: {e}")
             else:
-
                 st.warning("Please enter a prompt.")
+
+# --- ERROR HANDLING FOR MISSING SECRETS ---
+except KeyError:
+    # This error will occur if GOOGLE_API_KEY is missing from secrets.toml
+    st.error("Configuration Error: The GOOGLE_API_KEY secret was not found.")
+    st.info("Please ensure your `.streamlit/secrets.toml` file exists and contains `GOOGLE_API_KEY = \"YOUR_KEY\"`")
+except Exception as e:
+    st.error(f"An unexpected configuration error occurred: {e}")
