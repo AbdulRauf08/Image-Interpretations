@@ -15,7 +15,7 @@ try:
 
     # 2. Configure the Gemini API
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # --- UI and Logic ---
 
@@ -53,3 +53,4 @@ except KeyError:
     st.info("Please ensure your `.streamlit/secrets.toml` file exists and contains `GOOGLE_API_KEY = \"YOUR_KEY\"`")
 except Exception as e:
     st.error(f"An unexpected configuration error occurred: {e}")
+
